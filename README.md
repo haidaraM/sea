@@ -16,3 +16,4 @@ Commandes à éxécuter à la racine du projet.
  - Liste des registres : ``` info registers ```
  - Afficher le mode actuel : ``` print_sr ```
  - Affiche les valuers contenues dans la pile : ``` dump_top_of_stack ```
+ - Reset : ``` reset ```
