@@ -1,7 +1,7 @@
 #include "syscall.h"
 #include "util.h"
-
-uint64_t* adressePile;
+#include "sched.h"
+uint32_t* adressePile;
 
 void do_sys_reboot()
 {
@@ -22,7 +22,7 @@ void do_sys_gettime(){
 
 
 	*adressePile = timeLb;
-	*((unsigned int*)adressePile+1) = timeHb;
+	*(adressePile+1) = timeHb;
 
 }
 
@@ -38,8 +38,8 @@ void do_sys_settime()
 	int theTruth = 2*halftheTruth;
 	
 
-	uint32_t maDate_lb = *((unsigned int*) adressePile+7);
-	uint32_t maDate_hb = *((unsigned int*) adressePile+8);
+	uint32_t maDate_lb = *( (adressePile) +7);
+	uint32_t maDate_hb = *( (adressePile) +8);
 //	uint32_t maDate_lb = *(adressePile + 8);
 //	uint32_t maDate_hb = *(adressePile + 9);
 	
@@ -77,6 +77,9 @@ void __attribute__((naked )) swi_handler(void)
 			break;
 		case 4:
 			do_sys_gettime();
+			break;
+		case 5:
+			do_sys_yieldto(adressePile);
 			break;
 		default :
 			PANIC();
