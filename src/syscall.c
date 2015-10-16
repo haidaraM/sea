@@ -40,8 +40,6 @@ void do_sys_settime()
 
 	uint32_t maDate_lb = *( (adressePile) +7);
 	uint32_t maDate_hb = *( (adressePile) +8);
-//	uint32_t maDate_lb = *(adressePile + 8);
-//	uint32_t maDate_hb = *(adressePile + 9);
 	
 	
 	uint64_t date = ( (uint64_t)maDate_hb << 32) + maDate_lb;

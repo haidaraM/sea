@@ -19,9 +19,16 @@ struct pcb_s
 };
 
 
+typedef int (func_t)(void);
+
 void sys_yieldto(struct pcb_s* dest);
 
 void do_sys_yieldto(uint32_t* adressePile);
+
 void sched_init();
+
+struct pcb_s* create_process(func_t* entry);
+
+
 
 #endif // SCHED_H
