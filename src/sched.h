@@ -7,14 +7,20 @@ struct pcb_s
 	// process id
 	//uint32_t pid;
 
-	//
+	// Registres du contexte
 	uint32_t registre[13];
 
-	// lr
+	// lr du svc
 	uint32_t lr;
 
-	//
+	// lr user
 	uint32_t lr_user;
+
+	// pointeur vers la pile d'éxécution du processus
+	uint32_t * sp;
+
+	// registre d'état du processus
+	uint32_t cpsr;
 
 };
 

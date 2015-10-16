@@ -16,10 +16,10 @@ void do_sys_yieldto(uint32_t* adressePile)
 	}
 	current_process->lr = *(adressePile +13);
 
-	__asm("cps #31");
+	__asm("cps #31"); // mode système
 	__asm("mov %0, lr":"=r"(current_process->lr_user));
-
-	__asm("cps #19");
+	__asm("mov %0, sp": "=r"(current_process->sp));
+	__asm("cps #19"); // mode svc
 
 	// Charger le nouveau contexte dans la pile à la place des anciens registres
 	for (int i = 0; i < 13; ++i)
@@ -28,22 +28,41 @@ void do_sys_yieldto(uint32_t* adressePile)
 	}
 	*(adressePile+13) = nouveauContexte->lr;
 
+	// sauvegarde du spsr du mode svc dans currrent_process
+	__asm("mrs %0, spsr" : "=r"(current_process->cpsr));
+
 	// On est obligé de faire ça avant de modifier la valeur de lr.
 	// on ne peut pas taper directement dans la variable locale nouveauContexte quand 
 	// on passe en mode système.
 	current_process = nouveauContexte;	
 
-	__asm("cps #31");
+	__asm("cps #31"); // mode système
 	__asm("mov lr, %0": :"r"(current_process->lr_user));
-	__asm("cps #19");  
+	__asm("mov sp, %0": :"r"(current_process->sp));
+	__asm("cps #19");  // mode svc
+
+	// restauration dans spsr du cpsr sauvegardé
+	__asm("msr spsr, %0" : : "r"(current_process->cpsr));
 	
 }
 
+/*
+ Cree un nouveau process
+*/
 struct pcb_s* create_process(func_t* entry)
 {
 	struct pcb_s * process = (struct pcb_s *) kAlloc(sizeof(struct pcb_s));
 	process->lr = (uint32_t) entry;
 	process->lr_user = (uint32_t) entry;
+
+	__asm("mrs %0, cpsr":"=r"(process->cpsr));
+
+	// allocation de la pile d'éxécution
+	uint32_t * stack = (uint32_t *) kAlloc(10000);
+
+	// Il faut décaler sp vers la fin de la zone mémoire car la pile croit dans le sens 
+	// décroissant des adresses.
+	process->sp = stack + 10000;
 
 	return process;
 }
