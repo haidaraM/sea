@@ -28,12 +28,14 @@ void do_sys_yieldto(uint32_t* adressePile)
 	}
 	*(adressePile+13) = nouveauContexte->lr;
 
+	
+	current_process = nouveauContexte;	
+
 	__asm("cps #31");
-	__asm("mov lr, %0": :"r"(nouveauContexte->lr_user));
+	__asm("mov lr, %0": :"r"(current_process->lr_user));
 	__asm("cps #19");  
 	// on change le processus courant
 	// 
-	current_process = nouveauContexte;	
 
 }
 
