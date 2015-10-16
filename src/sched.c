@@ -28,14 +28,15 @@ void do_sys_yieldto(uint32_t* adressePile)
 	}
 	*(adressePile+13) = nouveauContexte->lr;
 
-	
+	// On est obligé de faire ça avant de modifier la valeur de lr.
+	// on ne peut pas taper directement dans la variable locale nouveauContexte quand 
+	// on passe en mode système
 	current_process = nouveauContexte;	
 
 	__asm("cps #31");
 	__asm("mov lr, %0": :"r"(current_process->lr_user));
 	__asm("cps #19");  
-	// on change le processus courant
-	// 
+	
 
 }
 
