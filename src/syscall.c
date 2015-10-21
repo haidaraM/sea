@@ -79,6 +79,9 @@ void __attribute__((naked )) swi_handler(void)
 		case 5:
 			do_sys_yieldto(adressePile);
 			break;
+		case 6 :
+			do_sys_yield(adressePile);
+			break;
 		default :
 			PANIC();
 			

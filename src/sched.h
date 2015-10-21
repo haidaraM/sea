@@ -21,6 +21,9 @@ struct pcb_s
 
 	// registre d'état du processus
 	uint32_t cpsr;
+	
+	// pointeur sur le processus suivant dans la liste
+	struct pcb_s* next;
 
 };
 
@@ -30,6 +33,11 @@ typedef int (func_t)(void);
 void sys_yieldto(struct pcb_s* dest);
 
 void do_sys_yieldto(uint32_t* adressePile);
+
+void sys_yield();
+
+void do_sys_yield(uint32_t* adressePile);
+
 
 void sched_init();
 
