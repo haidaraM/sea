@@ -1,5 +1,6 @@
 #ifndef SCHED_H
 #define SCHED_H
+typedef enum { false, true } bool;
 
 #include "stdint.h"
 struct pcb_s
@@ -24,7 +25,11 @@ struct pcb_s
 	
 	// pointeur sur le processus suivant dans la liste
 	struct pcb_s* next;
+	
+	//pointer sur le proces precedent dans la liste (on en a besoin pour facilement effaces un element de la liste)
+	struct pcb_s* previous;
 
+	bool terminated;
 };
 
 
@@ -38,8 +43,13 @@ void sys_yield();
 
 void do_sys_yield(uint32_t* adressePile);
 
+void sys_exit();
+
+void do_sys_exit();
 
 void sched_init();
+
+int get_amount_running();
 
 struct pcb_s* create_process(func_t* entry);
 

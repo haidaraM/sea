@@ -6,11 +6,13 @@
 void user_process()
 {
     int v=0;
-    for(;;)
+    while(v<5)
     {
         v++;
         sys_yield();
     }
+    
+    sys_exit();
 }
 
 void kmain( void )
@@ -26,8 +28,10 @@ void kmain( void )
     __asm("cps 0x10"); // switch CPU to USER mode
     // ******************************************
 
-    while(1)
+    while(get_amount_running() > 0)
     {
         sys_yield();
     }
+
+    terminate_kernel();
 }

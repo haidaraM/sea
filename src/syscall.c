@@ -52,7 +52,7 @@ void do_sys_settime()
 
 void __attribute__((naked )) swi_handler(void)
 {
-	//on sauve le contexte dans la pile
+	//on sauve les registres sur la pile
 	__asm("stmfd sp!, {r0-r12, lr}");
 //	__asm("stmfd sp, {r0-r12, lr}");
 	
@@ -82,11 +82,14 @@ void __attribute__((naked )) swi_handler(void)
 		case 6 :
 			do_sys_yield(adressePile);
 			break;
+		case 7:
+			do_sys_exit();
+			break;
 		default :
 			PANIC();
 			
 	}
-	//on recupere le contexte dans la pile
+	//on recupere les registres de la pile
 	__asm("ldmfd sp!, {r0-r12, pc}^");
 	
 }
