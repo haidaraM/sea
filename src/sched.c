@@ -170,7 +170,7 @@ void do_sys_exit()
 	current_process->terminated=true;
 	
 	// librere les ressources dont on avait besoin pour la gestion de ce processus
-	// ToDo [...]
+	kFree((uint8_t *)current_process, sizeof(struct pcb_s));
 }
 
 void sys_exit()
@@ -184,15 +184,12 @@ void sys_exit()
 // lorsque il ne reste que une seul (kmain) on peut beint terminer le noyeau.
 int get_amount_running()
 {
-	//ce boucle compte combien des processus dans la liste ne osnt pas encore marque comme termine
+	//ce boucle compte combien des processus restend dans la liste
 	int amountRunning = 0;
 	struct pcb_s * looper = current_process->next;
 	while(looper != current_process)
 	{
-		if(looper->terminated==false)
-		{
-			amountRunning++;
-		}
+		amountRunning++;
 		looper = looper->next;
 	}
 	return amountRunning;
